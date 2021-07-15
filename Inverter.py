@@ -39,7 +39,7 @@ class Inverter:
             if retryCount > 0:
                 time.sleep(0.05 * retryCount)
                 # reinit connection
-                print "Retry count: " + str(retryCount) + " Reinitialize connection"
+                print ("Retry count: " + str(retryCount) + " Reinitialize connection")
                 self.connection.close()
                 self.connection = serial.Serial('/dev/ttyUSB0',Configuration.serialBaud, timeout=Configuration.serialTimeoutSecs, parity=serial.PARITY_EVEN, rtscts=1, xonxoff=1)
             try:
@@ -53,7 +53,7 @@ class Inverter:
                 return self.__unpackData(response, commandObj)
             except Exception as e:
                 retryCount += 1
-                print commandObj[1] + " command failed: " + str(e) + " RS485 id: " + str(self.inverterNum)
+                print (commandObj[1] + " command failed: " + str(e) + " RS485 id: " + str(self.inverterNum))
 
     #checks for a valid STX, ETX and CRC
     def isValidResponse(self,cmd):
@@ -87,11 +87,11 @@ class Inverter:
                     resp,invNum,size,instruction,value = struct.unpack('>BBB2sH',cmdcontents)
                     value = value / divisor
                 elif fmt==2: ##Int Numbers
-    #                print ":".join("{0:x}".format(ord(c)) for c in cmdcontents)
+    #                print (":".join("{0:x}".format(ord(c)) for c in cmdcontents))
                     resp,invNum,size,instruction,value = struct.unpack('>BBB2sI',cmdcontents)
                     value = value / divisor
                 elif fmt==3: ##Long Numbers
-                 #   print ":".join("{0:x}".format(ord(c)) for c in cmdcontents)
+                 #   print (":".join("{0:x}".format(ord(c)) for c in cmdcontents))
                     resp,invNum,size,instruction,value = struct.unpack('>BBB2sQ',cmdcontents)
                     value = value / divisor
                 elif fmt==4: ##Signed Numbers
@@ -106,21 +106,21 @@ class Inverter:
                     resp,invNum,size,instruction,ver,major,minor = struct.unpack('>BBB2sBBB',cmdcontents)
                     return str(ver) +"." + str(major)+ "."+ str(minor)
                 elif fmt==11: ## Date #
-                    #print ":".join("{0:x}".format(ord(c)) for c in cmdcontents)
+                    #print (":".join("{0:x}".format(ord(c)) for c in cmdcontents))
                     resp,invNum,size,instruction,day,month,year = struct.unpack('>BBB2sBBB',cmdcontents)
                     return str(day) +"/" + str(month)+ "-20"+ str(year)
                 elif fmt==13: ## Date 2 #
                     resp,invNum,size,instruction,day,month,year = struct.unpack('>BBB3sBBB',cmdcontents)
                     return str(day) +"/" + str(month)+ "-20"+ str(year)
                 elif fmt==12: ## Time #
-                    # print ":".join("{0:x}".format(ord(c)) for c in cmdcontents)
+                    # print (":".join("{0:x}".format(ord(c)) for c in cmdcontents))
                     resp,invNum,size,instruction,ver,major,minor = struct.unpack('>BBB2sBBB',cmdcontents)
                     return str(ver) +":" + str(major)+ ":"+ str(minor)
                 else:
                     resp,invNum,size,instruction,value = struct.unpack('>BBB2s%ds' % lendata,cmdcontents)
                 return str(value)
             except:
-                print ":".join("{0:x}".format(ord(c)) for c in cmdcontents)
+                print (":".join("{0:x}".format(ord(c)) for c in cmdcontents))
                 return "Error parsing string, perhaps unknown instruction. " + cmdcontents[3:5] + "format: " + fmt
         except:
             print("Error unpacking response. cmdcontents: " + ":".join("{0:x}".format(ord(c)) for c in cmdcontents))

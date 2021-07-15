@@ -12,9 +12,9 @@ def checkSystemDate(date, sysId, dbWh):
            '-H', 'X-Pvoutput-SystemId: ' + sysId,
            'http://pvoutput.org/service/r2/getoutput.jsp?df=' + date + '\&dt=' + date]
     ret = subprocess.check_output(cmd)
-    # print ret
+    # print (ret)
     if "Bad request 400: No system or data found" == ret:
-        print "NO DATA FOR DAY"
+        print ("NO DATA FOR DAY")
         pvoWh = -1
         pvDate = "n/a"
     else:
@@ -23,12 +23,12 @@ def checkSystemDate(date, sysId, dbWh):
             pvDate = tokens[0]
             pvoWh = int(tokens[1])
         except:
-            print ret
+            print (ret)
             sys.exit()
     print("dbdate: " + date + " pvdate: " + pvDate + " " + sysId + " pvoWh: " + str(pvoWh) + " dbWh:" + str(
         dbWh)) + " match: " + str(pvoWh == dbWh)
     if dbWh > pvoWh:
-        print "PV is missing data!"
+        print ("PV is missing data!")
         cmd = ['/usr/bin/curl',
                '-XPOST',
                '-H', 'X-Pvoutput-Apikey: ' + Configuration.APIKEY,
@@ -36,7 +36,7 @@ def checkSystemDate(date, sysId, dbWh):
                '-d', 'data=' + date + "," + str(dbWh),
                'http://pvoutput.org/service/r2/addoutput.jsp?df=' + date + '\&dt=' + date]
         ret = subprocess.check_output(cmd)
-        print ret
+        print (ret)
 
 
 if __name__ == '__main__':

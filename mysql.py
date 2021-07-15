@@ -47,6 +47,6 @@ class MysqlInserter:
             con.commit()
         except Error as e:
             con.rollback()
-            print "Something went wrong inserting into mysql. " + e
+            print ("Something went wrong inserting into mysql. " + e)
 
         con.close()

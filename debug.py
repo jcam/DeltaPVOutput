@@ -15,7 +15,7 @@ if __name__ == '__main__':
     t_time = 't={0}'.format(strftime('%H:%M'))
 
     for index in range(len(Configuration.SYSTEMIDS)):
-        print "-------- Inverter with RS485 id: " + str(Configuration.RS485IDS[index]) + "--------"
+        print ("-------- Inverter with RS485 id: " + str(Configuration.RS485IDS[index]) + "--------")
         inv = Delta30EU_G4_TR_Inverter(Configuration.RS485IDS[index], connection) #init Inverter
         # Loop through all known commands
         for command in inv.cmds:
@@ -24,5 +24,5 @@ if __name__ == '__main__':
                 value = inv.call(commandName)
                 print (commandName + ": " + str(value) + " " + str(unit))
             except Exception as e:
-                print "######### Error getting data form inverter. Command: " + commandName + " exception: " + str(e) + " traceback line-no: " + str(sys.exc_traceback.tb_lineno)
+                print ("######### Error getting data form inverter. Command: " + commandName + " exception: " + str(e) + " traceback line-no: " + str(sys.exc_traceback.tb_lineno))
     connection.close()

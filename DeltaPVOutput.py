@@ -2,10 +2,10 @@
 #PVoutput.org
 
 import time, subprocess,serial
-from delta30EUG4TRInv import Delta30EU_G4_TR_Inverter
+from delta33Inv import Delta33G3Inverter
 from time import localtime, strftime
 from config import Configuration
-from mysql import MysqlInserter
+#from mysql import MysqlInserter
 
 #PVOutput.org API Values - UPDATE THESE TO YOURS!
 
@@ -30,10 +30,10 @@ if __name__ == '__main__':
     validInv =0
 
     for index in range(len(Configuration.SYSTEMIDS)):
-        inv = Delta30EU_G4_TR_Inverter(Configuration.RS485IDS[index], connection) #init Inverter
+        inv = Delta33G3Inverter(Configuration.RS485IDS[index], connection) #init Inverter
         #Get the Daily Energy thus far
         try:
-            energyDay = int(inv.call('Energy Day'))
+            energyDay = int(inv.call('Energy Today'))
             validInv+=1
             totalWh+= energyDay
 
@@ -45,15 +45,15 @@ if __name__ == '__main__':
             t_power = 'v2={0}'.format(acPower)
 
             #instanteous power DC-side
-            dcPower = inv.call('DC Power')
+            dcPower = inv.call('DC Power 1')
             totalDCPower+=int(dcPower)
 
             #DC Voltage
-            dcVoltage = inv.call('DC Voltage')
+            dcVoltage = inv.call('DC Voltage 1')
             t_volts = 'v6={0}'.format(dcVoltage)
 
             #Temp - this appears to be onboard somewhere not the heatsink
-            temp = inv.call('Internal Ambient Temperature')
+            temp = inv.call('DC Temp')
             avgTempDC += int(temp)
             t_temp = 'v5={0}'.format(temp)
 
@@ -70,16 +70,16 @@ if __name__ == '__main__':
                     '-H', 'X-Pvoutput-SystemId: ' + Configuration.SYSTEMIDS[index],
                     'http://pvoutput.org/service/r1/addstatus.jsp']
                 ret = subprocess.call (cmd)
-            try:
-                m = MysqlInserter()
-                m.insert(Configuration.RS485IDS[index], dcVoltage, dcPower, acPower)
-            except:
-                print "Error inserting into mysql"
+            #try:
+                #m = MysqlInserter()
+                #m.insert(Configuration.RS485IDS[index], dcVoltage, dcPower, acPower)
+            #except:
+                #print ("Error inserting into mysql")
         except:
-            print "No or failed response from inverter %d - shutdown? No Data sent to PVOutput.org"% (index+1)
+            print ("No or failed response from inverter %d - shutdown? No Data sent to PVOutput.org"% (index+1))
 
     if validInv >1 and totalACPower >0:
-        print "%d awake Inverters" % validInv
+        print ("%d awake Inverters" % validInv)
         avgTempDC=avgTempDC/validInv
 
         t_energy = 'v1={0}'.format(totalWh)
@@ -98,6 +98,6 @@ if __name__ == '__main__':
                 'http://pvoutput.org/service/r1/addstatus.jsp']
         ret = subprocess.call (cmd)
     else:
-       print "No response from any inverter - shutdown? No Data sent to PVOutput.org"
+       print ("No response from any inverter - shutdown? No Data sent to PVOutput.org")
     
     connection.close()

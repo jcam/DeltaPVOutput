@@ -31,7 +31,7 @@ if __name__ == '__main__':
     print ("1: DC Current: " + str(dcCurrent1) + " A")
 
     try:
-        print "1: Efficiency: %.2f%%" % (100.0*int(acPower1)/int(dcPower1))
+        print ("1: Efficiency: %.2f%%" % (100.0*int(acPower1)/int(dcPower1)))
     except:
         pass
 
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     print ("2: DC Current: " + str(dcCurrent2) + " A")
 
     try:
-        print "2: Efficiency: %.2f%%" % (100.0*int(acPower2)/int(dcPower2))
+        print ("2: Efficiency: %.2f%%" % (100.0*int(acPower2)/int(dcPower2)))
     except:
         pass
 
@@ -79,4 +79,4 @@ if __name__ == '__main__':
         m.insert(1, dcVoltage1, dcPower1, acPower1)
         m.insert(2, dcVoltage2, dcPower2, acPower2)
     except:
-        print "Error inserting into mysql"
+        print ("Error inserting into mysql")
