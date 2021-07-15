@@ -27,6 +27,8 @@ class Configuration:
 
     # Only change settings below this line, if you know what you are doing.
 
+    serialPort=/dev/ttyUSB0
+
     # Must match the inverter(s) rs485 baud rate
     serialBaud=19200
     # Above 0.05s seems to be sane

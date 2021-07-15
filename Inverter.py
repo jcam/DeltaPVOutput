@@ -41,7 +41,7 @@ class Inverter:
                 # reinit connection
                 print ("Retry count: " + str(retryCount) + " Reinitialize connection")
                 self.connection.close()
-                self.connection = serial.Serial('/dev/ttyUSB0',Configuration.serialBaud, timeout=Configuration.serialTimeoutSecs, parity=serial.PARITY_EVEN, rtscts=1, xonxoff=1)
+                self.connection = serial.Serial(Configuration.serialPort,Configuration.serialBaud, timeout=Configuration.serialTimeoutSecs, parity=serial.PARITY_EVEN, rtscts=1, xonxoff=1)
             try:
                 self.connection.write(self.__buildCmd(commandObj[0]))
                 response = self.connection.read(commandObj[5])

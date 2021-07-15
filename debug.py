@@ -8,7 +8,7 @@ from config import Configuration
 
 if __name__ == '__main__':
 
-    connection = serial.Serial('/dev/ttyUSB0',Configuration.serialBaud, timeout=Configuration.serialTimeoutSecs)
+    connection = serial.Serial(Configuration.serialPort,Configuration.serialBaud, timeout=Configuration.serialTimeoutSecs)
     localtime = time.localtime(time.time())   
  
     t_date = 'd={0}'.format(strftime('%Y%m%d'))
